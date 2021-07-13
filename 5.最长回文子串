@@ -1,0 +1,54 @@
+int *expandPalindrome(char *s, int len, int left, int right)
+{
+    
+    while(left>=0 && right<len )
+    {
+        if(s[left]==s[right])
+        {
+            left--;
+            right++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    int *res = (int *)malloc(sizeof(int)*3);
+    res[0]=left+1, res[1]=right-1, res[2]=right-left-1;
+    return res;
+ 
+}
+
+char * longestPalindrome(char * s){
+    int len = strlen(s);
+    if(len==0)
+    {
+        return "";
+    }
+    char *str;
+    int maxstrlen = 1, start=0, end=0;
+    for(int i=0; i<len; i++)
+    {
+        int *res1 = expandPalindrome(s, len, i, i);
+        int *res2 = expandPalindrome(s, len, i, i+1);
+        //printf("%d\n", *res1);
+        if(*(res1+2)>maxstrlen)
+        {
+           maxstrlen = *(res1+2);
+           start = *(res1);
+           end = *(res1+1);
+        }
+        if(res2[2]>maxstrlen)
+        {
+            maxstrlen = res2[2];
+            start = res2[0];
+            end = res2[1];
+        }
+    }
+    str = malloc(sizeof(char)*(maxstrlen+1));
+    strncpy(str, s+start, maxstrlen);
+    str[maxstrlen] = '\0';
+
+    return str;
+}
+
