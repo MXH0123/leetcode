@@ -1,0 +1,61 @@
+void dfs(int *candidates, int candidatesSize, int target, int *returnSize, int **returnColumnSizes, int **res, int sum, int index, int *stack, int top)
+{
+    if(sum > target)
+    {
+        return;
+    }
+    if(sum == target)
+    {
+        res[*returnSize] = (int *)malloc(sizeof(int) * top);
+        memcpy(res[*returnSize], stack, sizeof(int) * top);
+        (*returnColumnSizes)[*returnSize] = top;
+        *returnSize = *returnSize + 1;
+        return;
+    }
+    else
+    {
+        int hashSet[51] = {0};
+        int i;
+        for(i = index+1; i<candidatesSize; i++)
+        {
+            if(hashSet[candidates[i]] == 0)
+            {
+                hashSet[candidates[i]] = 1;
+                stack[top] = candidates[i];
+                dfs(candidates, candidatesSize, target, returnSize, returnColumnSizes, res, sum+candidates[i], i, stack, top+1);
+            }
+        }
+    }
+}
+
+int cmp(const void *a, const void *b)
+{
+    if(*(int *)a >= *(int *)b)
+    {
+        return 1;
+    }
+    return -1;
+}
+
+int** combinationSum2(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes)
+{
+    int **res = (int **)malloc(sizeof(int **) * 210);
+    *returnColumnSizes = (int *)malloc(sizeof(int *) * 210);
+    *returnSize = 0;
+
+    qsort(candidates, candidatesSize, sizeof(int), cmp);
+    int hashSet[51] = {0};
+    int stack[51];
+    int i;
+
+    for(i=0; i<candidatesSize; i++)
+    {
+        if(hashSet[candidates[i]] == 0)
+        {
+            hashSet[candidates[i]] = 1;
+            stack[0] = candidates[i];
+            dfs(candidates, candidatesSize, target, returnSize, returnColumnSizes, res, candidates[i], i, stack, 1);
+        }
+    }
+    return res;
+}
